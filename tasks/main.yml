@@ -1,5 +1,6 @@
 ---
 - name: MongoDB | Fetch 10Gen signing key
+  changed_when: false
   command: apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 - name: MongoDB | Add 10Gen repository
