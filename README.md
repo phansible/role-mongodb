@@ -2,23 +2,30 @@
 
 [![CI](https://github.com/phansible/role-mongodb/actions/workflows/ci.yml/badge.svg)](https://github.com/phansible/role-mongodb/actions/workflows/ci.yml)
 
-An Ansible Role that installs [MongoDB](https://www.mongodb.org/) on Ubuntu specifically created with [Phansible](http://phansible.com/) in mind.
+An Ansible Role that installs [MongoDB](https://www.mongodb.com/) 9.0 Community Edition from MongoDB's official apt repository on Ubuntu and Debian, created with [Phansible](http://phansible.com/) in mind.
 
 ## Requirements
 
-// TODO
+- Ubuntu 22.04, 24.04, 26.04 or Debian 12, 13 (x86_64, CPU with AVX)
+- Ansible >= 2.15
+- Root access or `become` on the target
+- HTTPS access to repo.mongodb.org and pgp.mongodb.com
 
 ## Role Variables
 
-// TODO
+None. The role writes `/etc/mongod.conf` with the data in `/var/lib/mongodb`, logs in `/var/log/mongodb/mongod.log`, and `mongod` listening on `127.0.0.1:27017`. The `mongod` service is started and enabled.
 
 ## Dependencies
 
-// TODO
+None.
 
 ## Example Playbook
 
-// TODO
+```yaml
+- hosts: all
+  roles:
+    - role-mongodb
+```
 
 ## License
 

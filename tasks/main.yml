@@ -1,14 +1,56 @@
 ---
-- name: MongoDB | Install latest MongoDB release
-  apt: pkg=mongodb state=present update_cache=yes
+- name: Install repository prerequisites
+  become: yes
+  apt:
+    pkg: ca-certificates
+    update_cache: yes
+    cache_valid_time: 3600
 
-- name: MongoDB | Create default configuration template
+- name: Ensure apt keyrings directory exists
+  become: yes
+  file: path=/etc/apt/keyrings state=directory mode=0755
+
+- name: Add MongoDB repository key
+  become: yes
+  get_url:
+    url: https://pgp.mongodb.com/server-9.asc
+    dest: /etc/apt/keyrings/mongodb-server-9.asc
+    mode: '0644'
+    force: no
+
+# the distro mongodb package is gone; 9.0 is the only series MongoDB publishes for all supported targets
+- name: Add MongoDB repository
+  become: yes
+  deb822_repository:
+    name: mongodb-org-9.0
+    uris: "https://repo.mongodb.org/apt/{{ ansible_facts.distribution | lower }}"
+    suites: "{{ ansible_facts.distribution_release }}/mongodb-org/9.0"
+    components: "{{ 'multiverse' if ansible_facts.distribution == 'Ubuntu' else 'main' }}"
+    signed_by: /etc/apt/keyrings/mongodb-server-9.asc
+    install_python_debian: yes
+  register: mongodb_repo
+
+- name: Update packages database for the MongoDB repository
+  become: yes
+  apt: update_cache=yes
+  when: mongodb_repo is changed
+
+- name: Install MongoDB
+  become: yes
+  apt: pkg=mongodb-org state=present
+
+- name: Create default configuration template
+  become: yes
   template:
-    src=mongodb.conf.tpl
-    dest=/etc/mongodb.conf
-    owner=root group=root mode=0644
+    src: mongod.conf.tpl
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: '0644'
   notify:
     - mongodb-restart
 
-- name: MongoDB | Insure deamon is running correctly
-  service: name=mongodb state=started
+# unlike the old distro package, mongodb-org does not enable mongod on install
+- name: Ensure mongod is running and enabled
+  become: yes
+  service: name=mongod state=started enabled=yes
