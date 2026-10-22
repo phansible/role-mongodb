@@ -1,6 +1,6 @@
 # Phansible Role: MongoDB
 
-[![Build Status](https://travis-ci.org/phansible/role-mongodb.svg?branch=master)](https://travis-ci.org/phansible/role-mongodb)
+[![CI](https://github.com/phansible/role-mongodb/actions/workflows/ci.yml/badge.svg)](https://github.com/phansible/role-mongodb/actions/workflows/ci.yml)
 
 An Ansible Role that installs [MongoDB](https://www.mongodb.org/) on Ubuntu specifically created with [Phansible](http://phansible.com/) in mind.
 
