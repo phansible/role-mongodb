@@ -1,9 +1,8 @@
 ---
 - name: mongodb-start
-  service: name=mongodb state=started
+  become: yes
+  service: name=mongod state=started
 
 - name: mongodb-restart
-  service: name=mongodb state=restarted
-
-- name: mongodb-reload
-  service: name=mongodb state=reloaded
+  become: yes
+  service: name=mongod state=restarted
